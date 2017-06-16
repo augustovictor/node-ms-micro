@@ -2,13 +2,9 @@
 const {send, json}        = require('micro');
 const {router, get, post} = require('microrouter');
 const rateLimit           = require('micro-ratelimit');
-const mongoose            = require('mongoose');
+const database            = require('./database/db');
 const model               = require('./model/index');
 const controller          = require('./controller/index');
-
-// CONNECTION
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/msdb');
 
 const hello = rateLimit({window: 5000, limit: 2}, (req, res) => {
     send(res, 200, `Hello, ${req.params.who}`);
