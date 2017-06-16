@@ -1,6 +1,7 @@
 'use strict';
 const mongoose   = require('mongoose');
 const Movie      = mongoose.model('Movies');
+const utils = require('../utils/utils');
 
 module.exports.allMovies = async () => {
     return await Movie.find({}, (err, result) => {
@@ -11,8 +12,9 @@ module.exports.allMovies = async () => {
 
 module.exports.newMovie = async (rawData) => {
     const movie = new Movie(rawData);
-    return await movie.save(err => {
-        if (err) return err;
-        return movie;
-    });
+    try {
+        return await movie.save(() => movie);
+    } catch(err) {
+        return utils.validateModel(err);
+    }
 }

@@ -6,5 +6,5 @@ exports.allMovies = async () => {
 };
 
 exports.newMovie = async (rawData) => {
-    return await moviesService.newMovie(rawData);
+    return await moviesService.newMovie(rawData);;
 }
