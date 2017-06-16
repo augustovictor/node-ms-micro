@@ -1,4 +1,4 @@
-# node-ms-micro
+# Micro sample project
 
 Sample [micro](https://github.com/zeit/micro) project.
 
