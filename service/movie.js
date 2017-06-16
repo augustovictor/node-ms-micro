@@ -8,3 +8,11 @@ module.exports.allMovies = async () => {
         return result;
     });
 };
+
+module.exports.newMovie = async (rawData) => {
+    const movie = new Movie(rawData);
+    return await movie.save(err => {
+        if (err) return err;
+        return movie;
+    });
+}

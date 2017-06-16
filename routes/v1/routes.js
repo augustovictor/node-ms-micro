@@ -21,8 +21,15 @@ const movies = async (req, res) => {
     send(res, 200, movies);
 };
 
+const newMovie = async (req, res) => {
+    const rawMovie = await json(req);
+    const movie = await controller.movie.newMovie(rawMovie);
+    send(res, 200, movie);
+};
+
 module.exports = router(
     get('/hello/:who', hello),
     get('/movies', movies),
-    get('/*', notFound)
+    get('/*', notFound),
+    post('/movies/new', newMovie)
 );
