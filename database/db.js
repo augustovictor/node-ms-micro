@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+'use strict';
+const mongoose   = require('mongoose');
 const {database} = require('./config');
-
 mongoose.Promise = global.Promise;
 mongoose.connect(database);
 

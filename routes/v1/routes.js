@@ -1,3 +1,4 @@
+'use strict';
 const {send, json}        = require('micro');
 const {router, get, post} = require('microrouter');
 const rateLimit           = require('micro-ratelimit');
