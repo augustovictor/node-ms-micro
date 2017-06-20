@@ -2,6 +2,7 @@
 const {send, json}        = require('micro');
 const {router, get, post} = require('microrouter');
 const rateLimit           = require('micro-ratelimit');
+const cors                = require('micro-cors')();
 const database            = require('../../database/db');
 const model               = require('../../model/index');
 const controller          = require('../../controller/index');
@@ -29,7 +30,7 @@ const newMovie = async (req, res) => {
 
 module.exports = router(
     get('/hello/:who', hello),
-    get('/movies', movies),
+    get('/movies', cors(movies)),
     get('/*', notFound),
     post('/movies/new', newMovie)
 );
