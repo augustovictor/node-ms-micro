@@ -12,6 +12,12 @@ const hello = rateLimit({window: 5000, limit: 2}, (req, res) => {
     send(res, 200, `Hello, ${req.params.who}`);
 });
 
+const testPost = async (req, res) => {
+    const data = await json(req);
+    console.log('testPost');
+    send(res, 201, {data});
+};
+
 const notFound = (req, res) => {
     console.log('NOT FOUND.')
     send(res, 404, 'Endpoint not found');
@@ -26,13 +32,15 @@ const movies = async (req, res) => {
 const newMovie = async (req, res) => {
     console.log('movie')
     const rawMovie = await json(req);
+    console.log(rawMovie);
     const movie = await controller.movie.newMovie(rawMovie);
-    send(res, 200, movie);
+    send(res, 201, movie);
 };
 
 module.exports = router(
     get('/hello/:who', cors(hello)),
     get('/movies', cors(movies)),
     get('/*', notFound),
-    post('/movies', cors(newMovie))
+    post('/movies', cors(newMovie)),
+    post('/test-post', cors(testPost))
 );
