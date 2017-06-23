@@ -10,6 +10,13 @@ module.exports.allMovies = async () => {
     });
 };
 
+module.exports.movieById = async (movieId) => {
+    return await Movie.find({_id: movieId}, (err, result) => {
+        if(err) return err;
+        return result;
+    });
+}
+
 module.exports.newMovie = async (rawData) => {
     const movie = new Movie(rawData);
     try {
@@ -17,4 +24,4 @@ module.exports.newMovie = async (rawData) => {
     } catch(err) {
         return utils.validateModel(err);
     }
-}
+};

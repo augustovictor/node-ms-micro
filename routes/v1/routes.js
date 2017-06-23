@@ -29,10 +29,14 @@ const movies = async (req, res) => {
     send(res, 200, movies);
 };
 
+const movieById = async (req, res) => {
+    const movieId = await req.params.id;
+    const movie = await controller.movie.movieById(movieId);
+    send(res, 200, movie);
+}
+
 const newMovie = async (req, res) => {
-    console.log('movie')
     const rawMovie = await json(req);
-    console.log(rawMovie);
     const movie = await controller.movie.newMovie(rawMovie);
     send(res, 201, movie);
 };
@@ -40,6 +44,7 @@ const newMovie = async (req, res) => {
 module.exports = router(
     get('/hello/:who', cors(hello)),
     get('/movies', cors(movies)),
+    get('/movies/:id', cors(movieById)),
     get('/*', notFound),
     post('/movies', cors(newMovie)),
     post('/test-post', cors(testPost))
