@@ -1,11 +1,12 @@
 'use strict';
-const {send, json}        = require('micro');
-const {router, get, post} = require('microrouter');
-const rateLimit           = require('micro-ratelimit');
-const cors                = require('micro-cors')();
-const database            = require('../../database/db');
-const model               = require('../../model/index');
-const controller          = require('../../controller/index');
+const { send, json }             = require('micro');
+const { router, get, post, del } = require('microrouter');
+const rateLimit                  = require('micro-ratelimit');
+const cors                       = require('micro-cors')();
+const database                   = require('../../database/db');
+const model                      = require('../../model/index');
+const controller                 = require('../../controller/index');
+const { logRequest }             = require('../../middlewares/mid');
 
 // GENERAL
 const hello = rateLimit({window: 5000, limit: 2}, (req, res) => {
@@ -24,10 +25,10 @@ const notFound = (req, res) => {
 };
 
 // MOVIES
-const movies = async (req, res) => {
+const movies = logRequest(async (req, res) => {
     const movies = await controller.movie.allMovies();
     send(res, 200, movies);
-};
+});
 
 const movieById = async (req, res) => {
     const movieId = await req.params.id;
@@ -36,16 +37,34 @@ const movieById = async (req, res) => {
 }
 
 const newMovie = async (req, res) => {
-    const rawMovie = await json(req);
-    const movie = await controller.movie.newMovie(rawMovie);
-    send(res, 201, movie);
+    try {
+        const rawMovie = await json(req);
+        const movie = await controller.movie.newMovie(rawMovie);
+        send(res, 201, movie);
+    } catch(err) {
+        send(res, 500, err);
+    }
+};
+
+const delMovie = async (req, res) => {
+    const movieId = await req.params.id;
+    console.log(movieId);
+    send(res, 200, 'ok');
 };
 
 module.exports = router(
     get('/hello/:who', cors(hello)),
+    post('/test-post', cors(testPost)),
+
+    // === MOVIES ===
+    // get
     get('/movies', cors(movies)),
     get('/movies/:id', cors(movieById)),
     get('/*', notFound),
+
+    // post
     post('/movies', cors(newMovie)),
-    post('/test-post', cors(testPost))
+
+    // delete
+    del('/movies/:id', cors(delMovie))
 );
