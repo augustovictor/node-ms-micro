@@ -15,7 +15,20 @@ exports.movieById = async (movieId) => {
         if(err) return err;
         return result;
     });
-}
+};
+
+exports.updateMovie = (movie) => {
+    try {
+        return new Promise((resolve, reject) => {
+            Movie.findOneAndUpdate({_id: movie._id}, movie, { upsert: true, new: true }, (err, result) => {
+                if(err) reject(err);
+                resolve(result);
+            });
+        });
+    } catch(err) {
+        return err;
+    }
+};
 
 exports.newMovie = async (rawData) => {
     const movie = new Movie(rawData);
@@ -31,4 +44,4 @@ exports.delMovie = async(movieId) => {
         if(err) return err;
         return result;
     });
-}
+};
