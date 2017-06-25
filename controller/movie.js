@@ -10,5 +10,9 @@ exports.movieById = async (movieId) => {
 };
 
 exports.newMovie = async (rawData) => {
-    return await moviesService.newMovie(rawData);;
+    return await moviesService.newMovie(rawData);
 };
+
+exports.delMovie = async (movieId) => {
+    return await moviesService.delMovie(movieId);
+}

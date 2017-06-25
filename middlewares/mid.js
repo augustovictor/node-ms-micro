@@ -1,6 +1,6 @@
-exports.logRequest = (next) => {
+exports.logRequest = (handler) => {
     return (req, res) => {
         console.log('Request received!');
-        return next(req, res);
+        return handler(req, res);
     };
 };

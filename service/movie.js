@@ -3,21 +3,21 @@ const mongoose   = require('mongoose');
 const Movie      = mongoose.model('Movies');
 const utils = require('../utils/utils');
 
-module.exports.allMovies = async () => {
+exports.allMovies = async () => {
     return await Movie.find({}, (err, result) => {
         if(err) return err;
         return result;
     });
 };
 
-module.exports.movieById = async (movieId) => {
+exports.movieById = async (movieId) => {
     return await Movie.find({_id: movieId}, (err, result) => {
         if(err) return err;
         return result;
     });
 }
 
-module.exports.newMovie = async (rawData) => {
+exports.newMovie = async (rawData) => {
     const movie = new Movie(rawData);
     try {
         return await movie.save(() => movie);
@@ -25,3 +25,11 @@ module.exports.newMovie = async (rawData) => {
         return utils.validateModel(err);
     }
 };
+
+exports.delMovie = async(movieId) => {
+    return await Movie.remove({ _id: movieId }, (err, result) => {
+        if(err) return err;
+        console.log(result);
+        return result;
+    });
+}
