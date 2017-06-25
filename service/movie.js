@@ -29,7 +29,6 @@ exports.newMovie = async (rawData) => {
 exports.delMovie = async(movieId) => {
     return await Movie.remove({ _id: movieId }, (err, result) => {
         if(err) return err;
-        console.log(result);
         return result;
     });
 }
