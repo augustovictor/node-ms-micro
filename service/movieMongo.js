@@ -17,14 +17,9 @@ exports.movieById = async (movieId) => {
     });
 };
 
-exports.updateMovie = (movie) => {
+exports.updateMovie = async (movie) => {
     try {
-        return new Promise((resolve, reject) => {
-            Movie.findOneAndUpdate({_id: movie._id}, movie, { upsert: true, new: true }, (err, result) => {
-                if(err) reject(err);
-                resolve(result);
-            });
-        });
+        return await Movie.findOneAndUpdate({_id: movie._id}, movie, {upsert: true, new: true}).exec();
     } catch(err) {
         return err;
     }
