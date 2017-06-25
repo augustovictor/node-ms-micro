@@ -1,6 +1,6 @@
 'use strict';
 const { send, json }             = require('micro');
-const { router, get, post, del } = require('microrouter');
+const { router, get, post, del, options } = require('microrouter');
 const rateLimit                  = require('micro-ratelimit');
 const cors                       = require('micro-cors')();
 const database                   = require('../../database/db');
@@ -25,10 +25,10 @@ const notFound = (req, res) => {
 };
 
 // MOVIES
-const movies = logRequest(async (req, res) => {
+const movies = async (req, res) => {
     const movies = await controller.movie.allMovies();
     send(res, 200, movies);
-});
+};
 
 const movieById = async (req, res) => {
     const movieId = await req.params.id;
@@ -47,24 +47,29 @@ const newMovie = async (req, res) => {
 };
 
 const delMovie = async (req, res) => {
-    const movieId = await req.params.id;
-    console.log(movieId);
-    send(res, 200, 'ok');
+    try {
+        const movieId = await req.params.id;
+        const movie = await controller.movie.delMovie(movieId);
+        send(res, 200, movie.result);
+    } catch(err) {
+        console.log(err);
+        send(res, 500, err);
+    }
 };
 
-module.exports = router(
-    get('/hello/:who', cors(hello)),
-    post('/test-post', cors(testPost)),
+module.exports = cors(logRequest(router(
+    get('/hello/:who', hello),
+    post('/test-post', testPost),
 
     // === MOVIES ===
     // get
-    get('/movies', cors(movies)),
-    get('/movies/:id', cors(movieById)),
+    get('/movies', movies),
+    get('/movies/:id', movieById),
     get('/*', notFound),
 
     // post
-    post('/movies', cors(newMovie)),
+    post('/movies', newMovie),
 
     // delete
-    del('/movies/:id', cors(delMovie))
-);
+    del('/movies/:id', delMovie),
+)));
